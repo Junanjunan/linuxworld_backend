@@ -39,7 +39,8 @@ DJANGO_APPS = [
 ]
 
 PROJECT_APPS = [
-    "users.apps.UsersConfig"
+    "users.apps.UsersConfig",
+    "apis.apps.ApisConfig"
 ]
 
 THIRD_PARTY_APPS = [
