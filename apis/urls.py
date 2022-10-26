@@ -5,5 +5,6 @@ from . import views
 app_name = "api"
 
 urlpatterns = [
+    path("signup/", views.SignUpView.as_view()),
     path("profile/<int:pk>/", views.ProfileView.as_view()),
 ]

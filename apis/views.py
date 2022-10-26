@@ -28,3 +28,13 @@ class ProfileView(APIView):
         return Response()
 
 
+class SignUpView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            new_user = serializer.save()
+            new_user.set_password(request.data["password"])
+            new_user.save()
+            return Response(UserSerializer(new_user).data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
