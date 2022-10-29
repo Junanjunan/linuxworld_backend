@@ -1,8 +1,11 @@
 from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import check_password
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import ParseError, NotFound
+from rest_framework.permissions import IsAuthenticated
 from users.models import User
 from .serializers import UserSerializer
 
@@ -38,3 +41,31 @@ class SignUpView(APIView):
             return Response(UserSerializer(new_user).data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogInView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        if not username or not password:
+            raise ParseError
+        user = authenticate(
+            request,
+            username=username,
+            password=password,
+        )
+        if user:
+            login(request, user)
+            return Response({"ok": "Welcome!"})
+        else:
+            return Response({"error": "wrong password"})
+
+
+
+class LogOutView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        return Response({"ok": "bye!"})
