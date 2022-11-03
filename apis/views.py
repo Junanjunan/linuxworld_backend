@@ -31,6 +31,16 @@ class ProfileView(APIView):
         return Response()
 
 
+class MeView(APIView):
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(
+            user,
+            context={"request":request}
+        ).data
+        return Response(serializer)
+
+
 class SignUpView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
